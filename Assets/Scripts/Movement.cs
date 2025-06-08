@@ -4,36 +4,50 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-     public float speed = 5f;              // скорость ходьбы
-    public float gravity = -9.81f;        // гравитация
-    private Vector3 velocity;             // скорость для вертикального движения (гравитация)
+    private const float gravityScale = 9.8f, speedScale = 5f, jumpForce = 3.5f, turnspeed = 105f;
+    private float verticalSpeed = 0f, mouseX = 0f, mouseY = 0f, CurrentAngleX = 0f;
     private CharacterController controller;
-
+    [SerializeField] private Camera goCamera;
+    // Start is called before the first frame update
     void Start()
     {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         controller = GetComponent<CharacterController>();
     }
 
+    // Update is called once per frame
     void Update()
     {
-        // Получаем входные данные с клавиатуры (WASD или стрелочки)
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
+        RotateCharacter();
+        MoveCharacter();
+    }
 
-        // Создаем вектор направления движения в локальных координатах персонажа
-        Vector3 move = transform.right * moveX + transform.forward * moveZ;
+    void RotateCharacter()
+    {
+        mouseX = Input.GetAxis("Mouse X");
+        mouseY = Input.GetAxis("Mouse Y");
 
-        // Перемещаем персонажа
-        controller.Move(move * speed * Time.deltaTime);
+        transform.Rotate(new Vector3(0f, mouseX * turnspeed * Time.deltaTime, 0f));
+        CurrentAngleX += mouseY * turnspeed * Time.deltaTime * -1f;
+        CurrentAngleX = Mathf.Clamp(CurrentAngleX, -60f, 60f);
+        goCamera.transform.localEulerAngles = new Vector3(CurrentAngleX, 0f, 0f);
+    }
 
-        // Обработка гравитации
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
-
-        // Если персонаж стоит на земле — сбрасываем вертикальную скорость
-        if (controller.isGrounded && velocity.y < 0)
+    void MoveCharacter()
+    {
+        Vector3 velocity = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));
+        velocity = transform.TransformDirection(velocity) * speedScale;
+        if(controller.isGrounded)
         {
-            velocity.y = -2f;  // небольшое отрицательное значение, чтобы персонаж прочно стоял на земле
+            verticalSpeed = 0f;
+            if(Input.GetButton("Jump"))
+            {
+                verticalSpeed = jumpForce;
+            }
         }
+        verticalSpeed -= gravityScale * Time.deltaTime;
+        velocity.y = verticalSpeed;
+        controller.Move(velocity * Time.deltaTime);
     }
 }

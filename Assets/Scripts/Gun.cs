@@ -22,11 +22,6 @@ public void AddKill()
     UpdateKillText();
 }
 
-void UpdateKillText()
-{
-    if (killTextUI != null)
-        killTextUI.text = "Kills: " + killCount;
-}
     public int killsToUpgrade = 30;
 
     [Header("Апгрейд")]
@@ -71,13 +66,12 @@ void UpdateKillText()
         isReloading = false;
     }
 
-    
-    
-
     void UpdateKillText()
     {
         if (killTextUI != null)
+        {
             killTextUI.text = "Kills: " + killCount;
+        }
     }
 
     void UpgradeGun()
