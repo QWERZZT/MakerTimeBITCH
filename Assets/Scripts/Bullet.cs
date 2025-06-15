@@ -15,6 +15,15 @@ public class Bullet : MonoBehaviour
     void Start()
     {
         Destroy(gameObject, lifetime);
+        
+        if (gun == null)
+        {
+            GameObject gunObject = GameObject.Find("Gun");
+            if (gunObject != null)
+            {
+                gun = gunObject.GetComponent<Gun>();
+            }
+        }
     }
 
     void Update()
@@ -36,6 +45,7 @@ public class Bullet : MonoBehaviour
                     if (gun != null)
                     {
                         gun.AddKill();  // +1 к киллам и обновление UI
+                        Debug.Log("Убийство");
                     }
                 }
             }
