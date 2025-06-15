@@ -20,6 +20,11 @@ public class EnemyPatrol : MonoBehaviour
 
     void Start()
     {
+        GameObject PatrolPointsParent = GameObject.Find("PatrolPoint");
+        for (int i = 0; i < patrolPoints.Length; i++)
+        {
+            patrolPoints[i] = PatrolPointsParent.transform.GetChild(i);
+        }
         agent = GetComponent<NavMeshAgent>();
         vision = GetComponent<EnemyVision>();
 
@@ -29,6 +34,7 @@ public class EnemyPatrol : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(currentState);
         switch (currentState)
         {
             case State.Patrol:

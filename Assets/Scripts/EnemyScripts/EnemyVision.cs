@@ -12,8 +12,14 @@ public class EnemyVision : MonoBehaviour
     public LayerMask targetMask;                 
     public LayerMask obstacleMask;               
 
-    public bool canSeePlayer;                    
+    public bool canSeePlayer;
 
+
+    private void Start()
+    {
+        player = GameObject.Find("Player").transform;
+        
+    }
     void Update()
     {
         FindPlayer();
