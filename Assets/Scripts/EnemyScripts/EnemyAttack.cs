@@ -10,14 +10,14 @@ public class EnemyAttack : MonoBehaviour
 
     private float lastAttackTime = 0f;
     private Transform player;
-    private PlayerHealth playerHealth;
+    private Health playerHealth;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         if (player != null)
         {
-            playerHealth = player.GetComponent<PlayerHealth>();
+            playerHealth = player.GetComponent<Health>();
         }
     }
 
